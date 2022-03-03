@@ -13,7 +13,7 @@ lossToken = open("loss.txt", "r")
 
 #CLASSES
 class colours:
-    RED = "\u001b[31m."
+    RED = "\u001b[31m"
     YELLOW = "\u001b[33m"
     GREEN = "\u001b[32m"
     RESET = "\u001b[0m"
@@ -86,7 +86,7 @@ while True: #Starts main game loop
         else: #Runs if the player doesn't want to make a deposit
             if balance < 1: #Checks if the player has enough money to play another round
                 print("If you continue you wont have enough money to continue playing.")
-                if input("Do you want to add more money to your account? (y/n) ").lower() == "y": #Double checks if the player wants to make a deposit
+                if input("Do you want to return to the investment options? (y/n) ").lower() == "y": #Double checks if the player wants to make a deposit
                     continue #Restarts the gettingDeposit loop
                 else: #Runs if the player doesn't want to make a deposit
                     gettingDeposit = False #Ends the gettingDeposit loop
@@ -138,15 +138,23 @@ while True: #Starts main game loop
         Show_Token(neutralToken) #Prints the neutral token
         result = "neutral"
 
+    ##PAYOUT##
+    #Provides the player with a pay out according to the token they recieved
+    if result == "win": #Runs if the player won
+        balance += bet*5 #Adds the players winnings to their balance
+        print(colours.GREEN + "JACKPOT!") #Prints the text in green
+        print("You won ${}!".format(bet*5))#Tells the player how much they won, still in green
+        print("Your balance is now ${}".format(balance) + colours.RESET) #Tells the player their balance after the winnings have been added, resets text colour
+    elif result == "loss": #Runs if the player lost
+        print(colours.RED + "You lost :(") #Prints the text in red
+        print("You won $0, and lost ${}.".format(bet)) #Tells the player how much money they lost, still in red
+        print("Your balance is now ${}.".format(balance) + colours.RESET) #Resets the text colour and tells the player their balance
+    elif result == "neutral": #Runs if the player got a neutral result
+        balance += bet*0.5
+        print(colours.YELLOW + "You got the neutral token.") #Prints the text in yellow
+        print("Your balance is now ${}.".format(balance) + colours.RESET) #Tells the player their balance and resets the text colour
 
 '''
-4. Depending on the token, change their balance appropriately.
-a. If jackpot(Unicorn) and 5 times how much they paid for the round
-b. If neutral(Horse or zebra) add half as much as they paid for the round
-c. If a loss(Donkey) pay nothing to the player
-
-5. Show the user how much they earned
-
 6. Ask if they want to play again
 '''
 
