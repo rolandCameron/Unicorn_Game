@@ -10,6 +10,7 @@ balance = 0
 jackpotToken = open("jackpot.txt", "r")
 neutralToken = open("neutral.txt", "r")
 lossToken = open("loss.txt", "r")
+logo = open("logo.txt", "r")
 
 #CLASSES
 class colours:
@@ -53,9 +54,15 @@ def Cycle_Tokens(): #Cycles through the tokens like a slot machine
     print("\n" * 100) #'clears' screen
 
 #MAIN
+
+##TEXT STRIPPING##
 lossToken = Initialise_Token(lossToken, colours.RED) #Removes '\n' from the file and sets its colour
 neutralToken = Initialise_Token(neutralToken, colours.YELLOW) #Removes '\n' from the file and sets its colour
 jackpotToken = Initialise_Token(jackpotToken, colours.GREEN) #Removes '\n' from the file and sets its colour
+logo = Initialise_Token(logo, colours.GREEN) #Removes '\n' from the file and sets its colour
+
+Show_Token(logo) #Shows the logo when the program starts
+print("\n\n\n") #Clears some lines to emphasise the logo
 
 while True: #Starts main game loop
     if totalDeposited < 10: #Ensures the player never deposits more than $10
@@ -70,16 +77,18 @@ while True: #Starts main game loop
                 deposit = input("How much would you like to deposit? (Enter a whole $ value) ") #Gets the players deposit
                 if Is_Int(deposit): #Checks if the deposit is an integer
                     deposit = int(deposit) #Turns the deposit into an int from a string
-                    if not totalDeposited + deposit > 10: #Checks if the player's deposit will make their total deposited greater than $10
-                        balance += deposit #Adds the player's deposit to their balance
-                        totalDeposited += deposit #Increments the totalDeposited by the player's deposit
+                    if deposit >= 1: #Checks that the user is inputting atleast 1
+                        if not totalDeposited + deposit > 10: #Checks if the player's deposit will make their total deposited greater than $10
+                            balance += deposit #Adds the player's deposit to their balance
+                            totalDeposited += deposit #Increments the totalDeposited by the player's deposit
 
-                        print("Deposit made, your balance is now ${}.".format(balance)) #Tells the player their new balance
+                            print("Deposit made, your balance is now ${}.".format(balance)) #Tells the player their new balance
 
-                        gettingDeposit = False #Ends the gettingDeposit loop
-                    else: #Runs if the player's deposit will exceed the maximum total deposit
-                        print("Depositing that much money would result in you exceeding out $10 limit on spending. Please deposit less money.")
-
+                            gettingDeposit = False #Ends the gettingDeposit loop
+                        else: #Runs if the player's deposit will exceed the maximum total deposit
+                            print("Depositing that much money would result in you exceeding out $10 limit on spending. Please deposit less money.")
+                    else: #Runs if the player inputs a number of 0 or lower
+                        print("Please deposit at least $1.")
                 else: #Runs if the player hasn't entered an integer
                     print("Make sure you are entering a whole dollar value, no decimal places, and that there are only numbers. ")
                     continue
@@ -154,9 +163,27 @@ while True: #Starts main game loop
         print(colours.YELLOW + "You got the neutral token.") #Prints the text in yellow
         print("Your balance is now ${}.".format(balance) + colours.RESET) #Tells the player their balance and resets the text colour
 
-'''
-6. Ask if they want to play again
-'''
+    playAgain = True
+    while playAgain: #Asks whether the player wants to play another round or not
+        if input("Would you like to play another round? (y/n) ").lower() == "y": #Asks if the player wants to play another round
+            print("restarting... \n\n\n")  #Lets the player know their input was recognised
+            time.sleep(0.5)
+            playAgain = False #Ends the playAgain loop
+            continue
+        else: #Runs if the player doesn't want to play again
+            print("Your current balance is ${}.".format(balance)) #Tells the player their balance
+            if input("Are you sure you want to quit? (y/n) ").lower() == "n": #Makes sure the player wants to quit
+                print("restarting... \n\n\n") #Lets the player know that their input was accepted
+                time.sleep(0.5)
+                playAgain = False #Ends the playAgain loop
+                continue
+            else: #Runs if the player doesn't want to play another game
+                print("Your balance is ${}. Please ask to be paid this amount.".format(balance)) #Tells the player to ask for their alloted payment
+                print("Shutting down...")
+                time.sleep(1)
+                sys.exit() #Exits the program
+
+
 
 
 
